@@ -12,7 +12,7 @@ describe RubyWarrior::Abilities::Form do
   
   it "should form a golem in front of warrior" do
     @form.perform
-    @floor.get(1, 0).should be_kind_of(RubyWarrior::Units::Golem)
+    expect(@floor.get(1, 0)).to be_kind_of(RubyWarrior::Units::Golem)
   end
   
   it "should form a golem in given direction" do

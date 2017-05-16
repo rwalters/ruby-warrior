@@ -22,7 +22,7 @@ describe RubyWarrior::Turn do
     
     it "should not be able to call multiple actions per turn" do
       @turn.walk! :forward
-      lambda { @turn.attack! }.should raise_error
+      expect { @turn.attack! }.to raise_error(RuntimeError, "Only one action can be performed per turn.")
     end
   end
   

@@ -17,7 +17,7 @@ describe RubyWarrior::Abilities::Attack do
   
   it "should do nothing if recipient is nil" do
     @attack.stubs(:unit).returns(nil)
-    lambda { @attack.perform }.should_not raise_error
+    expect{ @attack.perform }.not_to raise_error
   end
   
   it "should get object at position from offset" do

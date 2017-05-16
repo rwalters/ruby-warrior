@@ -36,7 +36,7 @@ describe RubyWarrior::LevelLoader do
     end
     
     it "should be able to add multi-word units" do
-      lambda { @loader.unit :thick_sludge, 1, 2 }.should_not raise_error
+      expect { @loader.unit :thick_sludge, 1, 2 }.not_to raise_error
     end
     
     it "should build warrior from profile" do

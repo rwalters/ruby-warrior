@@ -23,7 +23,7 @@ describe RubyWarrior::Abilities::Base do
   
   it "should fetch unit at given direction with distance" do
     @ability.expects(:space).with(:right, 3, 1).returns(stub(:unit => 'unit'))
-    @ability.unit(:right, 3, 1).should == 'unit'
+    expect(@ability.unit(:right, 3, 1)).to eq 'unit'
   end
   
   it "should have no description" do
@@ -31,8 +31,8 @@ describe RubyWarrior::Abilities::Base do
   end
   
   it "should raise an exception if direction isn't recognized" do
-    lambda {
+    expect {
       @ability.verify_direction(:foo)
-    }.should raise_error("Unknown direction :foo. Should be :forward, :backward, :left or :right.")
+    }.to raise_error(RuntimeError, "Unknown direction :foo. Should be :forward, :backward, :left or :right.")
   end
 end

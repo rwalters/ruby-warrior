@@ -16,7 +16,7 @@ describe RubyWarrior::Game do
   it "should not make game and exit if player says no" do
     RubyWarrior::UI.stubs(:ask).returns(false)
     Dir.stubs(:mkdir).raises('should not be called')
-    lambda { @game.make_game_directory }.should raise_error(SystemExit)
+    expect { @game.make_game_directory }.to raise_error(SystemExit)
   end
   
   
