@@ -11,7 +11,7 @@ describe RubyWarrior::Floor do
     it "should be able to add a unit and fetch it at that position" do
       unit = RubyWarrior::Units::Base.new
       @floor.add(unit, 0, 1, :north)
-      @floor.get(0, 1).should == unit
+      expect(@floor.get(0, 1)).to eq unit
     end
   
     it "should not consider unit on floor if no position" do
@@ -31,17 +31,17 @@ describe RubyWarrior::Floor do
     end
   
     it "should not consider corners out of bounds" do
-      @floor.should_not be_out_of_bounds(0, 0)
-      @floor.should_not be_out_of_bounds(1, 0)
-      @floor.should_not be_out_of_bounds(1, 2)
-      @floor.should_not be_out_of_bounds(0, 2)
+      expect(@floor).to_not be_out_of_bounds(0, 0)
+      expect(@floor).to_not be_out_of_bounds(1, 0)
+      expect(@floor).to_not be_out_of_bounds(1, 2)
+      expect(@floor).to_not be_out_of_bounds(0, 2)
     end
   
     it "should consider out of bounds when going beyond sides" do
-      @floor.should be_out_of_bounds(-1, 0)
-      @floor.should be_out_of_bounds(0, -1)
-      @floor.should be_out_of_bounds(0, 3)
-      @floor.should be_out_of_bounds(2, 0)
+      expect(@floor).to be_out_of_bounds(-1, 0)
+      expect(@floor).to be_out_of_bounds(0, -1)
+      expect(@floor).to be_out_of_bounds(0, 3)
+      expect(@floor).to be_out_of_bounds(2, 0)
     end
   
     it "should return space at the specified location" do
@@ -50,7 +50,7 @@ describe RubyWarrior::Floor do
   
     it "should place stairs and be able to fetch the location" do
       @floor.place_stairs(1, 2)
-      @floor.stairs_location.should == [1, 2]
+      @floor.stairs_location.should eq [1, 2]
     end
   end
   
@@ -64,7 +64,7 @@ describe RubyWarrior::Floor do
     it "should print map with stairs and unit" do
       @floor.add(RubyWarrior::Units::Warrior.new, 0, 0)
       @floor.place_stairs(2, 0)
-      @floor.character.should == <<-MAP
+      expect(@floor.character).to eq <<-MAP
  ---
 |@ >|
  ---
@@ -75,7 +75,7 @@ MAP
       u1 = RubyWarrior::Units::Base.new
       @floor.add(u1, 0, 0)
       @floor.add(RubyWarrior::Units::Base.new, 1, 0)
-      @floor.unique_units.should == [u1]
+      @floor.unique_units.should eq [u1]
     end
   end
 end
