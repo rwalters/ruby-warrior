@@ -33,6 +33,37 @@ class Player
       log("Warrior Health: #{warrior.health.to_s}")
       log("\n")
 
+      @health ||= health.to_i
+
+      if is_safe? && warrior.health < config[:rest_health]
+        return rest_here
+      end
+
+      if is_wall?
+        return pivot_me
+      end
+
+      if warrior.health < config[:run_health]
+        unless clear_direction.nil?
+          return run_away
+        end
+      end
+
+      if outnumbered?
+        return bind_enemy
+      end
+
+      unless enemy_direction.nil?
+        return attack
+      end
+
+      unless captive_direction.nil?
+        return recover
+      end
+
+      return default_walk
+    end
+=begin
       if health.nil? && !all_clear?
         return think
       else
@@ -67,9 +98,24 @@ class Player
 
       return default_walk
     end
+=end
 
     private
     attr_reader :warrior, :health, :last_move, :config
+
+    def outnumbered?
+      log("#{(__callee__).upcase}")
+      enemy_directions.count > 1
+    end
+
+    def bind_enemy
+      log("#{(__callee__).upcase}")
+      [warrior.health, nil, warrior.bind!(enemy_direction)]
+    end
+
+    def stairs_direction
+      warrior.direction_of_stairs
+    end
 
     def all_clear?
       t = shoot_directions.count.zero?
@@ -93,10 +139,15 @@ class Player
 
     def default_walk
       log("#{(__callee__).upcase}")
-      if wall_ahead?
-        pivot_me
+
+      if stairs_direction.nil?
+        if is_wall?
+          pivot_me
+        else
+          [warrior.health, nil, warrior.walk!]
+        end
       else
-        [warrior.health, nil, warrior.walk!]
+        [warrior.health, nil, warrior.walk!(stairs_direction)]
       end
     end
 
@@ -150,8 +201,10 @@ class Player
     def first_non_empty(direction = :forward)
       @first_non_empty ||= Hash.new
 
-      dir_array = warrior.look(direction)
-      @first_non_empty[direction] = dir_array.detect{|space| space.stairs? || !space.empty? }
+      #dir_array = warrior.look(direction)
+      dir_array = []
+      #@first_non_empty[direction] = dir_array.detect{|space| space.stairs? || !space.empty? }
+      @first_non_empty[direction] = warrior.feel(direction)
       log("#{__callee__.upcase}: DIR_ARRAY [#{dir_array.map(&:to_s).join(', ')}], FIRST '#{@first_non_empty[direction].to_s}'")
       @first_non_empty[direction]
     end
@@ -234,7 +287,7 @@ class Player
       return @clear_dirs if defined?(@clear_dirs)
       dirs = config[:directions].reject{|u| u == last_move}.select{|d| warrior.feel(d).empty? }
 
-      @clear_dirs = dirs - shoot_directions
+      @clear_dirs = dirs #- shoot_directions
       log("#{__callee__.upcase}: '#{@clear_dirs.join(', ')}'")
       @clear_dirs
     end
